@@ -18,19 +18,19 @@ public Plugin:myinfo =
 	url         = ""
 };
 
-// ƒvƒ‰ƒOƒCƒ“‰Šú‰»
+// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³åˆæœŸåŒ–
 public OnPluginStart()
 {
 	AddCommandListener(Command_Say, "say");
 }
 
-// ƒvƒ‰ƒOƒCƒ“I—¹
+// ãƒ—ãƒ©ã‚°ã‚¤ãƒ³çµ‚äº†
 public OnPluginEnd()
 {
 	Handles_Close();
 }
 
-// ƒ}ƒbƒvƒXƒ^[ƒgƒCƒxƒ“ƒg
+// ãƒãƒƒãƒ—ã‚¹ã‚¿ãƒ¼ãƒˆã‚¤ãƒ™ãƒ³ãƒˆ
 public OnMapStart()
 {
 	for (new index = 1; index <= MAXPLAYERS; index++) 
@@ -44,20 +44,20 @@ public OnMapStart()
 	CreateTimer(0.1, Timer_LoadConfig);
 }
 
-// ƒ}ƒbƒvI—¹ƒCƒxƒ“ƒg
+// ãƒãƒƒãƒ—çµ‚äº†ã‚¤ãƒ™ãƒ³ãƒˆ
 public OnMapEnd()
 {
 	Handles_Close();
 }
 
-// ƒNƒ‰ƒCƒAƒ“ƒg”FØƒCƒxƒ“ƒg
+// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆèªè¨¼ã‚¤ãƒ™ãƒ³ãƒˆ
 public OnClientAuthorized(client, const String:auth[])
 {
 	if(client != 0)
 		g_lastplay[client] = 0.0;
 }
 
-// ƒNƒ[ƒYˆ—
+// ã‚¯ãƒ­ãƒ¼ã‚ºå‡¦ç†
 Handles_Close()
 {
 	if (g_listkv != INVALID_HANDLE)
@@ -67,7 +67,7 @@ Handles_Close()
 	}
 }
 
-// ƒNƒ‰ƒCƒAƒ“ƒgŠm”F
+// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆç¢ºèª
 public IsValidClient(client)
 {
 	if (client == 0)
@@ -85,7 +85,7 @@ public IsValidClient(client)
 	return true;
 }
 
-// ƒTƒEƒ“ƒh—pcfg“Ç‚İ‚İ
+// ã‚µã‚¦ãƒ³ãƒ‰ç”¨cfgèª­ã¿è¾¼ã¿
 public Action:Timer_LoadConfig(Handle:timer)
 {
 	Cfg_LoadDefault();
@@ -93,7 +93,7 @@ public Action:Timer_LoadConfig(Handle:timer)
 	return Plugin_Handled;
 }
 
-// cfg“Ç‚İ‚İ
+// cfgèª­ã¿è¾¼ã¿
 Cfg_LoadDefault()
 {
 	decl String:cfgfile[PLATFORM_MAX_PATH + 1];
@@ -118,7 +118,7 @@ Cfg_LoadDefault()
 			new count;
 
 			do {
-				// •Ï”‰Šú‰»
+				// å¤‰æ•°åˆæœŸåŒ–
 				count = KvGetNum(g_listkv, "count", 1);
 				filelocation[0] = '\0';
 
@@ -129,7 +129,7 @@ Cfg_LoadDefault()
 					AddFileToDownloadsTable(filelocation);
 				}
 
-				// •¡”ƒtƒ@ƒCƒ‹ƒL[
+				// è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«ã‚­ãƒ¼
 				for (new filenum = 1; filenum <= count; filenum++)
 				{
 					filelocation[0] = '\0';
@@ -147,10 +147,10 @@ Cfg_LoadDefault()
 	}
 }
 
-// sayƒRƒ}ƒ“ƒhƒtƒbƒN
+// sayã‚³ãƒãƒ³ãƒ‰ãƒ•ãƒƒã‚¯
 public Action:Command_Say(client, const String:command[], argc)
 {
-	// ƒL[”»’èˆÊ’u’²®
+	// ã‚­ãƒ¼åˆ¤å®šä½ç½®èª¿æ•´
 	decl String:speech[64];
 	new startidx = 0;
 
@@ -166,18 +166,18 @@ public Action:Command_Say(client, const String:command[], argc)
 	// !saycommand
 	if(strcmp(speech[startidx], "!saycommand", false) == 0)
 	{
-		ShowMOTDPanel(client, "Title", "http://files.iesaba.com/csmap/html/?f=saycommand.php", MOTDPANEL_TYPE_URL);
+		ShowMOTDPanel(client, "Title", "http://files.iesaba.com/csmap/html/?f=saycommand.htm", MOTDPANEL_TYPE_URL);
 		return Plugin_Handled;
 	}
 
-	// ƒL[ƒ[ƒhŠm”F
+	// ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ç¢ºèª
 	if(Sound_CheckKeyword(client, speech[startidx]))
 		return Plugin_Continue;
 
 	return Plugin_Continue;
 }
 
-// ƒL[ƒ[ƒhŠm”F
+// ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ç¢ºèª
 bool:Sound_CheckKeyword(client, const String:speech[])
 {
 	if(g_listkv != INVALID_HANDLE)
@@ -190,7 +190,7 @@ bool:Sound_CheckKeyword(client, const String:speech[])
 			new count          = KvGetNum(g_listkv, "count", 1);
 			new bool:trievalue = false;
 
-			// •¡”ƒtƒ@ƒCƒ‹ƒL[
+			// è¤‡æ•°ãƒ•ã‚¡ã‚¤ãƒ«ã‚­ãƒ¼
 			if (count > 1)
 			{
 				for (new filenum = 1; filenum <= count; filenum++)
@@ -215,7 +215,7 @@ bool:Sound_CheckKeyword(client, const String:speech[])
 			filelocation[0] = '\0';
 			KvGetString(g_listkv, file, filelocation, sizeof(filelocation));
 
-			// file1ˆ—
+			// file1å‡¦ç†
 			if (filelocation[0] == '\0' && StrEqual(file, "file1"))
 				KvGetString(g_listkv, "file", filelocation, sizeof(filelocation), "");
 
@@ -231,7 +231,7 @@ bool:Sound_CheckKeyword(client, const String:speech[])
 	return false;
 }
 
-// DataTimerì¬
+// DataTimerä½œæˆ
 Sound_CreateTimer(client, const String:name[], const String:filelocation[])
 {
 	new Float:thetime = GetGameTime();
@@ -254,14 +254,14 @@ Sound_CreateTimer(client, const String:name[], const String:filelocation[])
 	}
 }
 
-// ƒf[ƒ^ƒ^ƒCƒ}[
+// ãƒ‡ãƒ¼ã‚¿ã‚¿ã‚¤ãƒãƒ¼
 public Action:Sound_Timer(Handle:timer, Handle:pack)
 {
 	decl String:filelocation[PLATFORM_MAX_PATH + 1];
 	decl String:name[PLATFORM_MAX_PATH + 1];
 	new Float:thetime = GetGameTime();
 
-	// pack“Ç‚İ‚İ
+	// packèª­ã¿è¾¼ã¿
 	new client = ReadPackCell(pack);
 	ReadPackString(pack, name, sizeof(name));
 	ReadPackString(pack, filelocation, sizeof(filelocation));
@@ -274,7 +274,7 @@ public Action:Sound_Timer(Handle:timer, Handle:pack)
 	return Plugin_Handled;
 }
 
-// Ä¶
+// å†ç”Ÿ
 Sound_Play(const String:filelocation[])
 {
 	for (new i = 1; i <= MaxClients; i++)
