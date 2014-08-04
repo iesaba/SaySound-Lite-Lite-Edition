@@ -8,10 +8,6 @@ SourceMod / SayCommand plugin.
 
 http://casko.adam.ne.jp/script.html のSaysoundLEのもっと軽量化したバージョン
 
-チャットコマンド
---------
-
-!saycommand
 
 cfgフォーマット
 ---------
@@ -20,7 +16,6 @@ cfgフォーマット
 ファイルのダウンロード指定は行えません。全てのファイルのダウンロードを試みます。
 
  - "file"		ファイルパスの指定。csgo\soundフォルダからの相対パスを記述する
- - "count"		複数ファイル指定時のファイル数
 
 cfgサンプル
 -------
@@ -34,11 +29,5 @@ cfgサンプル
     	"foobar"
     	{
     		"file"	"misc/test/bar.mp3"
-    	}
-    	"foobar"
-    	{
-    		"file1"	"misc/test/foo.mp3"
-    		"file2"	"misc/test/bar.mp3"
-    		"count"	"2"
     	}
     }
