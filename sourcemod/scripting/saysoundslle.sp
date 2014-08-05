@@ -112,7 +112,7 @@ static Sound_Play(client, const String:speech[])
 						g_lastplay[client] = thetime;
 
 						Format(filelocationFake, sizeof(filelocationFake), "*%s", filelocation);
-						EmitSoundToAll(filelocationFake, SOUND_FROM_PLAYER, SNDCHAN_USER_BASE);
+						EmitSoundToAll(filelocationFake, SOUND_FROM_PLAYER, SNDCHAN_STATIC);
 						PrintToServer("[iesaba] %N played %s", client, speech);
 					}
 				}
