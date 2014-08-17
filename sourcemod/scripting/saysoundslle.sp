@@ -12,7 +12,7 @@ public Plugin:myinfo =
 	name        = "SaysoundsLLE",
 	author      = "k725",
 	description = "Saysounds(Lite Lite Edition)",
-	version     = "1.1",
+	version     = "1.2",
 	url         = ""
 };
 
@@ -116,14 +116,14 @@ static Sound_Play(client, const String:speech[], channel)
 				{
 					if (speech[0] && IsValidClient(client))
 					{
-						g_lastplay[client] = thetime + 2.5;
+						g_lastplay[client] = thetime + 1.5;
 
 						Format(filelocationFake, sizeof(filelocationFake), "*%s", filelocation);
 						EmitSoundToAll(filelocationFake, SOUND_FROM_PLAYER, channel);
 					}
 				}
 				else
-					PrintToChat(client, "[iesaba] After using SaySounds to the last, it does not allow SaySounds for 2.5 seconds.");
+					PrintToChat(client, "[iesaba] After using SaySounds to the last, it does not allow SaySounds for 1.5 seconds.");
 			}
 		}
 	}
