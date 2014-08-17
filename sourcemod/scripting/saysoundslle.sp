@@ -76,7 +76,6 @@ public OnClientAuthorized(client, const String:auth[])
 		g_lastplay[client] = 0.0;
 }
 
-
 public Action:Command_Say(client, const String:command[], argc)
 {
 	decl String:speech[64];
