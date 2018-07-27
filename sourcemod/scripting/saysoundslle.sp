@@ -11,7 +11,7 @@ public Plugin: myinfo = {
 	name        = "SaysoundsLLE",
 	author      = "k725",
 	description = "Saysounds(Lite Lite Edition)",
-	version     = "1.3",
+	version     = "1.3.5",
 	url         = ""
 };
 
@@ -23,11 +23,28 @@ new bool: g_IsSaysoundEnabled[MAXPLAYERS + 1] = {
 public OnPluginStart() {
     AddCommandListener(Command_Say, "say");
     g_Cookie_SaysoundEnabled = RegClientCookie("saysound_enable", "Opt in or out of Saysound", CookieAccess_Private);
-	RegConsoleCmd("sm_saysound", SetSaysoundEnabled, "Opt in or out of Saysounds");
+    RegConsoleCmd("sm_stop", OnStop, "Stops song playback");
+    RegConsoleCmd("sm_saysound", SetSaysoundEnabled, "Opt in or out of Saysounds");
 }
 
 public OnPluginEnd() {
     Handles_Close();
+}
+
+public OnClientConnected(client) {
+    if (IsFakeClient(client)) {
+        return;
+    }
+    g_IsSaysoundEnabled[client] = true;
+
+    //enable pall by default for quickplayers
+    new String: connect_method[5];
+    GetClientInfo(client, "cl_connectmethod", connect_method, sizeof(connect_method));
+    if (strncmp("quick", connect_method, 5, false) == 0 ||
+        strncmp("match", connect_method, 5, false) == 0) {
+        g_IsSaysoundEnabled[client] = true;
+    }
+
 }
 
 public OpenPanel(String: title[], String: url[], client) {
