@@ -153,8 +153,6 @@ static Sound_Play(client,
     decl String: filelocation[PLATFORM_MAX_PATH + 1];
     decl String: filelocationFake[PLATFORM_MAX_PATH + 1];
     new Float: thetime = GetGameTime();
-    new String: realurl[192];
-    Format(realurl, 192, "https://notobigaming.com/saysounds/play.html?track=");
 
     if (g_listkv != INVALID_HANDLE) {
         KvRewind(g_listkv);
