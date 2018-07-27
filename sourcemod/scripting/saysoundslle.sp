@@ -3,27 +3,51 @@
 
 #include <sourcemod>
 #include <sdktools>
+#include <clientprefs>
 
 new Float:g_lastplay[MAXPLAYERS + 1];
 new Handle:g_listkv = INVALID_HANDLE;
+new Handle: g_Cookie_SaysoundEnabled = INVALID_HANDLE;
+new bool: g_IsSaysoundEnabled[MAXPLAYERS + 1] = {
+    false,
+    ...
+};
 
 public Plugin:myinfo =
 {
 	name        = "SaysoundsLLE",
 	author      = "k725",
 	description = "Saysounds(Lite Lite Edition)",
-	version     = "1.2",
+	version     = "1.3.5",
 	url         = ""
 };
 
 public OnPluginStart()
 {
 	AddCommandListener(Command_Say, "say");
+	g_Cookie_SaysoundEnabled = RegClientCookie("saysound_enable", "Opt in or out of Saysound", CookieAccess_Private);
+	RegConsoleCmd("sm_saysound", SetSaysoundEnabled, "Opt in or out of Saysounds");
 }
 
 public OnPluginEnd()
 {
 	Handles_Close();
+}
+
+public OnClientConnected(client) {
+    if (IsFakeClient(client)) {
+        return;
+    }
+    g_IsSaysoundEnabled[client] = true;
+
+	/* enable playing by default for quickplayers */
+	    new String: connect_method[5];
+	    GetClientInfo(client, "cl_connectmethod", connect_method, sizeof(connect_method));
+	    if (strncmp("quick", connect_method, 5, false) == 0 ||
+	        strncmp("match", connect_method, 5, false) == 0) {
+	        g_IsSaysoundEnabled[client] = true;
+	    }
+
 }
 
 public OnMapStart()
@@ -76,6 +100,35 @@ public OnClientAuthorized(client, const String:auth[])
 		g_lastplay[client] = 0.0;
 }
 
+
+public OnClientCookiesCached(client) {
+    new String: buffer[11];
+    GetClientCookie(client, g_Cookie_SaysoundEnabled, buffer, sizeof(buffer));
+    if (strlen(buffer) > 0) {
+        g_IsSaysoundEnabled[client] = bool: StringToInt(buffer);
+    }
+}
+
+public _ClientHasSaysoundEnabled(Handle: plugin, args) {
+    return _: ClientHasSaysoundEnabled(GetNativeCell(1));
+}
+bool: ClientHasSaysoundEnabled(client) {
+    return g_IsSaysoundEnabled[client];
+}
+
+public Action: SetSaysoundEnabled(int client, int args) {
+    if (!ClientHasSaysoundEnabled(client)) {
+        SetClientCookie(client, g_Cookie_SaysoundEnabled, "1");
+        g_IsSaysoundEnabled[client] = true;
+        PrintToChat(client, "enabled_saysound");
+
+    } else {
+        SetClientCookie(client, g_Cookie_SaysoundEnabled, "0");
+        g_IsSaysoundEnabled[client] = false;
+        PrintToChat(client, "disabled_saysound");
+	}
+}
+
 public Action:Command_Say(client, const String:command[], argc)
 {
 	decl String:speech[64];
@@ -101,31 +154,30 @@ static Sound_Play(client, const String:speech[], channel)
 	decl String:filelocationFake[PLATFORM_MAX_PATH + 1];
 	new Float:thetime = GetGameTime();
 
-	if(g_listkv != INVALID_HANDLE)
-	{
-		KvRewind(g_listkv);
+    if (g_listkv != INVALID_HANDLE) {
+        KvRewind(g_listkv);
 
-		if (KvJumpToKey(g_listkv, speech))
-		{
-			KvGetString(g_listkv, "file", filelocation, sizeof(filelocation));
+        if (KvJumpToKey(g_listkv, speech)) {
+            KvGetString(g_listkv, "file", filelocation, sizeof(filelocation));
 
-			if (filelocation[0] != '\0')
-			{
-				if (g_lastplay[client] < thetime)
-				{
-					if (speech[0] && IsValidClient(client))
-					{
-						g_lastplay[client] = thetime + 1.5;
-
-						Format(filelocationFake, sizeof(filelocationFake), "*%s", filelocation);
-						EmitSoundToAll(filelocationFake, SOUND_FROM_PLAYER, channel);
-					}
-				}
-				else
-					PrintToChat(client, "[iesaba] After using SaySounds to the last, it does not allow SaySounds for 1.5 seconds.");
-			}
-		}
-	}
+            if (filelocation[0] != '\0') {
+                if (g_lastplay[client] < thetime) {
+                    if (speech[0] && IsValidClient(client)) {
+                        g_lastplay[client] = thetime + 1.5;
+                        Format(filelocationFake, sizeof(filelocationFake), "*%s", filelocation);
+                        for (int i = 1; i <= MaxClients; i++) {
+                            if (IsClientInGame(i) && (!IsFakeClient(i))) {
+                                if (ClientHasSaysoundEnabled(i)) {
+                                    EmitSoundToClient(client, filelocationFake, .volume = volume);
+                                }
+                            }
+                        }
+                    }
+                } else
+                    PrintToChat(client, "[iesaba] After using SaySounds to the last, it does not allow SaySounds for 1.5 seconds.");
+            }
+        }
+    }
 }
 
 static bool:IsValidClient(client)
